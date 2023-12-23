@@ -1,0 +1,45 @@
+version: '1.0'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql_container
+    expose:
+      - 3306
+    env_file:
+      - .env.mysql  # Create a separate environment file for MySQL settings
+    restart: always
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    build: ./backend
+    # image: jasonbigcow/oauth2-fastapi
+    ports:
+      - 5001:5001
+    volumes:
+      - ./backend/:/usr/backend/
+    env_file:
+      - ./backend/production_mysql.env  # Adjust the environment file for MySQL
+    command: python3 run.py --prod
+    restart: always
+    depends_on:
+      - mysql
+
+  nginx:
+    build: ./
+    # image: jasonbigcow/oauth2-vue3-nginx
+    ports:
+      - 80:8080
+    restart: always
+    depends_on:
+      - backend
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+
+volumes:
+  mysql_data:
+
+networks:
+  default: 
+    name: fastapi_vue_network
