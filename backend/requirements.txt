@@ -1,0 +1,14 @@
+python-dotenv
+uvicorn
+fastapi
+SQLAlchemy
+databases
+asyncpg
+greenlet
+python-multipart
+bcrypt
+passlib
+python-jose
+pymysql
+aiomysql
+cryptography
